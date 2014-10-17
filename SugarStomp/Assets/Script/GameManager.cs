@@ -39,5 +39,6 @@ public class GameManager : MonoBehaviour {
   }
 	
   void AddPieces() {
+    Object.Instantiate(BoardPiece, new Vector3(0,0,0), Quaternion.identity);
   }
 }
