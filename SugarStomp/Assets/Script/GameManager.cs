@@ -3,31 +3,41 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
-	public int activePlayer = 1;
-	public int gameState = 0;
+  public GameObject BoardPiece;
+  public GameObject BoardSquare;
 
-	// Change the state of the game
-	public void ChangeState(int _newState) {
-		gameState = _newState;
-	}
+  public int activePlayer = 1;
+  public int gameState = 0;
 
-	void OnGUI() {
-		// Handle GUI events. May be called several times per frame (once per GUI event)
-		// Update labels, etc
-	}
-	
-	void Start() {
-		Debug.Log("Starting game!");
+  private int _boardSize = 8;
+  private int _boardYPos = -1;
 
-		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.	
-		CreateBoard();
-		AddPieces();
-	}
+  // Change the state of the game
+  public void ChangeState(int _newState) {
+    gameState = _newState;
+  }
+
+  void OnGUI() {
+    // Handle GUI events. May be called several times per frame (once per GUI event)
+    // Update labels, etc
+  }
 	
-	void CreateBoard() {
-		// eg. Object.Instantiate(...);
-	}
+  void Start() {
+    Debug.Log("Starting game!");
+
+    // Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
+    CreateBoard();
+    AddPieces();
+  }
 	
-	void AddPieces() {
-	}
+  void CreateBoard() {
+    for (int i = 0; i < _boardSize; i++) {
+      for (int j = 0; j < _boardSize; j++) {
+	Object.Instantiate(BoardSquare, new Vector3(i,_boardYPos,j), Quaternion.Euler(90,0,0));
+      }
+    }
+  }
+	
+  void AddPieces() {
+  }
 }
