@@ -2,10 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class PieceControl : MonoBehaviour {
-  private Camera _camera;
-	
   void Awake () {
-    _camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
   }
 	
   void Update () {
@@ -17,7 +14,7 @@ public class PieceControl : MonoBehaviour {
     RaycastHit hitInfo;
 
     if (Input.GetMouseButtonDown(0)) { // Left click
-      ray = _camera.ScreenPointToRay(Input.mousePosition);
+      ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
       if (Physics.Raycast(ray, out hitInfo)) {
 	gameObject.transform.position =
