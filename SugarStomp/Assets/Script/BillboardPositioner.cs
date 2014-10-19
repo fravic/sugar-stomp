@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
  
-public class CameraFacingBillboard : MonoBehaviour {
+public class BillboardPositioner : MonoBehaviour {
   private Camera _camera;
 
   void Awake () {

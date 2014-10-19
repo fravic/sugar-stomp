@@ -5,6 +5,8 @@ using System;
 public class PieceControl : MonoBehaviour {
 
   private bool _selected = false;
+  private float _yPosSelected = 1;
+  private float _yPosDefault = 0;
 
   void Awake () {
   }
@@ -34,14 +36,14 @@ public class PieceControl : MonoBehaviour {
 
   void SelectPiece() {
     if (!_selected) {
-      AnimateToYPos(gameObject.transform.position.y + 1);
+      AnimateToYPos(_yPosSelected);
       _selected = true;
     }
   }
 
   void DeselectPiece() {
     if (_selected) {
-      AnimateToYPos(gameObject.transform.position.y - 1);
+      AnimateToYPos(_yPosDefault);
       _selected = false;
     }
   }
