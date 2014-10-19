@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour {
   public int GameState = 0;
 
   private int _boardSize = 8;
-  private float _boardYPos = 0f;
-  private float _pieceYPos = 0.5f;
+  private float _boardYPos = -0.25f;
+  private float _pieceYPos = 0;
 
   void Start() {
     Debug.Log("Starting game!");
@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour {
 
     for (int i = 0; i < _boardSize; i++) {
       for (int j = 0; j < _boardSize; j++) {
-	GameObject tile = (GameObject)Instantiate(BoardSquare, new Vector3(i,_boardYPos,j), Quaternion.Euler(90,0,0));
+	GameObject tile = (GameObject)Instantiate(BoardSquare, new Vector3(i,_boardYPos,j), Quaternion.identity);
 	tile.name = "tile" + i + "," + j;
 	tile.transform.parent = board.transform;
       }

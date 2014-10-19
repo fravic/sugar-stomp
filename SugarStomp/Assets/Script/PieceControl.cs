@@ -17,10 +17,11 @@ public class PieceControl : MonoBehaviour {
       ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
       if (Physics.Raycast(ray, out hitInfo)) {
+	Debug.Log(hitInfo.collider.gameObject.transform.position.x);
 	gameObject.transform.position =
 	  new Vector3(hitInfo.collider.gameObject.transform.position.x,
 		      gameObject.transform.position.y,
-		      hitInfo.collider.gameObject.transform.position.z);
+ 		      hitInfo.collider.gameObject.transform.position.z);
       }
 
     }
