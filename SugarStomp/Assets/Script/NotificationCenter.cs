@@ -17,7 +17,7 @@ public class NotificationCenter : MonoBehaviour {
     }
   }
  
-  private Hashtable _notifications = new Hashtable();
+  private Dictionary<string, List<Component>> _notifications = new Dictionary<string, List<Component>>();
  
   public void AddObserver(Component observer, string name) {
     if (string.IsNullOrEmpty(name)) {
@@ -25,12 +25,14 @@ public class NotificationCenter : MonoBehaviour {
       return;
     }
 
-    if (_notifications[name] == null) {
-      _notifications[name] = new List<Component>();
+    List<Component> notifyList;
+    if (!_notifications.TryGetValue(name, out notifyList)) {
+      notifyList = new List<Component>();
+      _notifications.Add(name, notifyList);
     }
-    List<Component> notifyList = (List<Component>)_notifications[name];
+
     if (!notifyList.Contains(observer)) {
-	notifyList.Add(observer);
+      notifyList.Add(observer);
     }
   }
  
@@ -60,8 +62,8 @@ public class NotificationCenter : MonoBehaviour {
       return;
     }
 
-    List<Component> notifyList = (List<Component>)_notifications[notification.Name];
-    if (notifyList == null) {
+    List<Component> notifyList;
+    if (!_notifications.TryGetValue(notification.Name, out notifyList)) {
       Debug.Log("Notify list not found in PostNotification: " + notification.Name);
       return;
     }

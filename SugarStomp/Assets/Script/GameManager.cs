@@ -1,5 +1,7 @@
 using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
@@ -13,6 +15,8 @@ public class GameManager : MonoBehaviour {
   private int _boardSize = 8;
   private float _boardYPos = -0.25f;
   private float _pieceYPos = 0;
+
+  private Dictionary<string,GameObject> _piecePositions = new Dictionary<string,GameObject>();
 
   void Awake() {
     NotificationCenter.DefaultCenter.AddObserver(this, "PieceMoved");
@@ -56,8 +60,29 @@ public class GameManager : MonoBehaviour {
     controller.MeshObject.renderer.material.color = playerNum == 0 ? Color.red : Color.blue;
   }
 
+  void DestroyPiece(GameObject piece) {
+  }
+
   void PieceMoved(NotificationCenter.Notification notification) {
+    GameObject pieceToKill;
+    int tileX = (int)Math.Floor(notification.Sender.transform.position.x);
+    int tileZ = (int)Math.Floor(notification.Sender.transform.position.z);
+    
+    if (pieceToKill = GetPieceAtTile(tileX, tileZ)) {
+      DestroyPiece(pieceToKill);
+    }
+
+    UpdatePiecePosition(notification.Sender.name, tileX, tileZ);
     NextTurn();
+  }
+
+  GameObject GetPieceAtTile(int tileX, int tileZ) {
+    // TODO
+    return null;
+  }
+
+  void UpdatePiecePosition(string pieceName, int tileX, int tileZ) {
+    // TODO
   }
 
   void NextTurn() {

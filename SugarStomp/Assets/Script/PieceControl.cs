@@ -45,8 +45,11 @@ public class PieceControl : MonoBehaviour {
 	if (hitInfo.collider.gameObject.transform.IsChildOf(gameObject.transform)) {
 	  SelectPiece();
 	} else if (_selected) {
-	  MoveToTile((int)Math.Floor(hitInfo.collider.gameObject.transform.position.x),
-		     (int)Math.Floor(hitInfo.collider.gameObject.transform.position.z));
+	  int tileX = (int)Math.Floor(hitInfo.collider.gameObject.transform.position.x);
+	  int tileZ = (int)Math.Floor(hitInfo.collider.gameObject.transform.position.z);
+	  if (IsTileAccessible(tileX, tileZ)) {
+	    MoveToTile(tileX, tileZ);
+	  }
         }
       }
 
@@ -78,10 +81,19 @@ public class PieceControl : MonoBehaviour {
     Vector3 pos = new Vector3(tileX, gameObject.transform.position.y, tileZ);
     Hashtable tweenOptions = new Hashtable {
 	{"position", pos},
-	{"oncomplete", "DeselectPiece"},
+	{"oncomplete", "MoveToTileComplete"},
 	{"time", 0.5f}
     }; 
     iTween.MoveTo(gameObject, tweenOptions);
+  }
+
+  void MoveToTileComplete() {
     NotificationCenter.DefaultCenter.PostNotification(this, "PieceMoved");
+    DeselectPiece();
+  }
+
+  bool IsTileAccessible(int tileX, int tileZ) {
+    return Math.Abs(transform.position.x - tileX) <= 1 &&
+      Math.Abs(transform.position.z - tileZ) <= 1;
   }
 }
