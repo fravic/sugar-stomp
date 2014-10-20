@@ -4,17 +4,36 @@ using System;
 
 public class PieceControl : MonoBehaviour {
 
+  public GameObject MeshObject = null;
+  public int PlayerNum = 0;
+  public bool InputEnabled = true;
+
   private bool _selected = false;
   private float _yPosSelected = 1;
   private float _yPosDefault = 0;
 
-  void Awake () {
+  void Awake() {
+    NotificationCenter.DefaultCenter.AddObserver(this, "NextTurn");
   }
-	
-  void Update () {
-    ReadInput();
+
+  void OnDestroy() {
+    NotificationCenter.DefaultCenter.RemoveObserver(this, "NextTurn");
   }
-	
+
+  void Update() {
+    if (InputEnabled) {
+      ReadInput();	
+    }
+  }
+
+  void NextTurn(NotificationCenter.Notification notification) {
+    if (notification.Data["activePlayerNum"] == null) {
+      Debug.LogError("No activePlayerNum set in NextTurn notification");
+      return;
+    }
+    InputEnabled = ((int)notification.Data["activePlayerNum"] == PlayerNum);
+  }
+
   void ReadInput() {
     Ray ray;
     RaycastHit hitInfo;
@@ -55,13 +74,14 @@ public class PieceControl : MonoBehaviour {
     iTween.MoveTo(gameObject, newPos, 0.5f);
   }
 
-  void MoveToTile(int x, int z) {
-    Vector3 pos = new Vector3(x, gameObject.transform.position.y, z);
+  void MoveToTile(int tileX, int tileZ) {
+    Vector3 pos = new Vector3(tileX, gameObject.transform.position.y, tileZ);
     Hashtable tweenOptions = new Hashtable {
 	{"position", pos},
 	{"oncomplete", "DeselectPiece"},
 	{"time", 0.5f}
     }; 
     iTween.MoveTo(gameObject, tweenOptions);
+    NotificationCenter.DefaultCenter.PostNotification(this, "PieceMoved");
   }
 }
