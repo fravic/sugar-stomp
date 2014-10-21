@@ -4,6 +4,7 @@ using System;
 
 public abstract class BoardEntity : MonoBehaviour {
 
+  public Board GameBoard;
   public GameObject MeshObject = null;
 
   public int GetTileX() {
@@ -31,6 +32,20 @@ public abstract class BoardEntity : MonoBehaviour {
     iTween.MoveTo(gameObject, tweenOptions);
   }
 
-  protected abstract void MoveToTileComplete();
+  protected virtual void MoveToTileComplete() {
+    GameBoard.UpdatePiecePosition(this, GetTileX(), GetTileZ());
+  }
+
+  protected virtual void CollideInto(BoardEntity collider) {
+    collider.CollideReceived(this);
+  }
+
+  protected virtual void CollideReceived(BoardEntity collider) {
+    DestroyEntity();
+  }
+
+  protected virtual void DestroyEntity() {
+    Destroy(gameObject);
+  }
 
 }

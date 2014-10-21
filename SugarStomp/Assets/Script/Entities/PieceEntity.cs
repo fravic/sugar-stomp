@@ -11,8 +11,21 @@ public class PieceEntity : BoardEntity {
   private float _yPosSelected = 1;
   private float _yPosDefault = 0;
 
+  protected override void MoveToTileComplete() {
+    BoardEntity collideEntity = GameBoard.GetPieceAtTile(GetTileX(), GetTileZ());
+
+    base.MoveToTileComplete();
+
+    if (collideEntity != null) {
+      CollideInto(collideEntity);
+    }
+
+    NotificationCenter.DefaultCenter.PostNotification(this, "EndTurn");
+    DeselectPiece();
+  }
+
   void Awake() {
-    NotificationCenter.DefaultCenter.AddObserver(this, "NextTurn");
+    NotificationCenter.DefaultCenter.AddObserver(this, "StartTurn");
   }
 
   void Update() {
@@ -21,7 +34,7 @@ public class PieceEntity : BoardEntity {
     }
   }
 
-  void NextTurn(NotificationCenter.Notification notification) {
+  void StartTurn(NotificationCenter.Notification notification) {
     if (notification.Data["activePlayerNum"] == null) {
       Debug.LogError("No activePlayerNum set in NextTurn notification");
       return;
@@ -63,11 +76,6 @@ public class PieceEntity : BoardEntity {
       AnimateToYPos(_yPosDefault);
       _selected = false;
     }
-  }
-
-  protected override void MoveToTileComplete() {
-    NotificationCenter.DefaultCenter.PostNotification(this, "PieceMoved");
-    DeselectPiece();
   }
 
   bool IsTileAccessible(int tileX, int tileZ) {

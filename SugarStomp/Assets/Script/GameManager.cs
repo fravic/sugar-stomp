@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
-  public GameObject BoardPiece;
-  public GameObject BoardSquare;
+  public GameObject BoardPieceTemplate;
+  public GameObject BoardSquareTemplate;
 
   public int NumPlayers = 2;
   public int ActivePlayer = -1;
@@ -17,10 +17,8 @@ public class GameManager : MonoBehaviour {
   private float _boardYPos = -0.25f;
   private float _pieceYPos = 0;
 
-  private Dictionary<string,GameObject> _piecePositions = new Dictionary<string,GameObject>();
-
   void Awake() {
-    NotificationCenter.DefaultCenter.AddObserver(this, "PieceMoved");
+    NotificationCenter.DefaultCenter.AddObserver(this, "EndTurn");
   }
 
   void Start() {
@@ -36,7 +34,7 @@ public class GameManager : MonoBehaviour {
 
     for (int i = 0; i < _boardSize; i++) {
       for (int j = 0; j < _boardSize; j++) {
-	GameObject tile = (GameObject)Instantiate(BoardSquare, new Vector3(i,_boardYPos,j), Quaternion.identity);
+	GameObject tile = (GameObject)Instantiate(BoardSquareTemplate, new Vector3(i,_boardYPos,j), Quaternion.identity);
 	tile.name = "tile" + i + "," + j;
 	tile.transform.parent = board.transform;
       }
@@ -49,25 +47,16 @@ public class GameManager : MonoBehaviour {
   }
 
   void AddPiece(int playerNum, int tileX, int tileZ) {
-    GameObject piece = (GameObject)Instantiate(BoardPiece, new Vector3(tileX,_pieceYPos,tileZ), Quaternion.identity);
+    GameObject piece = (GameObject)Instantiate(BoardPieceTemplate, new Vector3(tileX,_pieceYPos,tileZ), Quaternion.identity);
     piece.name = "piece" + playerNum;
 
     PieceEntity entity = piece.GetComponent<PieceEntity>();
+    entity.GameBoard = _board;
     entity.PlayerNum = playerNum;
     entity.MeshObject.renderer.material.color = playerNum == 0 ? Color.red : Color.blue;
   }
 
-  void PieceMoved(NotificationCenter.Notification notification) {
-    BoardEntity pieceToKill;
-    BoardEntity movedPiece = (BoardEntity)notification.Sender;
-    int tileX = movedPiece.GetTileX();
-    int tileZ = movedPiece.GetTileZ();
-    
-    if (pieceToKill = _board.GetPieceAtTile(tileX, tileZ)) {
-      // TODO: Move this logic to Piece.Collide
-    }
-
-    _board.UpdatePiecePosition(movedPiece, tileX, tileZ);
+  void EndTurn() {
     NextTurn();
   }
 
@@ -76,7 +65,7 @@ public class GameManager : MonoBehaviour {
     Hashtable notifData = new Hashtable {
       {"activePlayerNum", ActivePlayer},
     }; 
-    NotificationCenter.DefaultCenter.PostNotification(this, "NextTurn", notifData);
+    NotificationCenter.DefaultCenter.PostNotification(this, "StartTurn", notifData);    
   }
 
 }
