@@ -46,13 +46,13 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Script\BillboardPositioner.cs" />
      <Compile Include="Assets\Script\Board.cs" />
-     <Compile Include="Assets\Script\BoardEntity.cs" />
      <Compile Include="Assets\Script\CameraPanControl.cs" />
+     <Compile Include="Assets\Script\Entities\BoardEntity.cs" />
+     <Compile Include="Assets\Script\Entities\PieceEntity.cs" />
      <Compile Include="Assets\Script\GameManager.cs" />
-     <Compile Include="Assets\Script\NotificationCenter.cs" />
-     <Compile Include="Assets\Script\PieceEntity.cs" />
+     <Compile Include="Assets\Script\Utilities\BillboardPositioner.cs" />
+     <Compile Include="Assets\Script\Utilities\NotificationCenter.cs" />
      <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
   </ItemGroup>
   <ItemGroup>

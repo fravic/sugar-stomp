@@ -4,14 +4,13 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
  
-public class NotificationCenter : MonoBehaviour {
+public class NotificationCenter {
 
   private static NotificationCenter _defaultCenter;
   public static NotificationCenter DefaultCenter {
     get {
-      if (!_defaultCenter) {
-	GameObject notificationObject = new GameObject("Default Notification Center");
-	_defaultCenter = notificationObject.AddComponent<NotificationCenter>();
+      if (_defaultCenter == null) {
+	_defaultCenter = new NotificationCenter();
       }
       return _defaultCenter; 
     }
