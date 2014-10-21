@@ -11,7 +11,7 @@ public class NotificationCenter : MonoBehaviour {
     get {
       if (!_defaultCenter) {
 	GameObject notificationObject = new GameObject("Default Notification Center");
-	_defaultCenter = notificationObject.AddComponent<NotificationCenter> ();
+	_defaultCenter = notificationObject.AddComponent<NotificationCenter>();
       }
       return _defaultCenter; 
     }
@@ -37,8 +37,8 @@ public class NotificationCenter : MonoBehaviour {
   }
  
   public void RemoveObserver(Component observer, string name) {
-    List<Component> notifyList = (List<Component>)_notifications[name];
-    if (notifyList != null) {
+    List<Component> notifyList;
+    if (_notifications.TryGetValue(name, out notifyList)) {
       if (notifyList.Contains(observer)) {
 	notifyList.Remove(observer);
       }

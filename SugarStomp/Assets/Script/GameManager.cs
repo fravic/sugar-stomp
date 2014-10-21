@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour {
   public int ActivePlayer = -1;
   public int GameState = 0;
 
+  private Board _board = new Board();
   private int _boardSize = 8;
   private float _boardYPos = -0.25f;
   private float _pieceYPos = 0;
@@ -30,10 +31,6 @@ public class GameManager : MonoBehaviour {
     NextTurn();
   }
 
-  void OnDestroy() {
-    NotificationCenter.DefaultCenter.RemoveObserver(this, "PieceMoved");
-  }
-	
   void CreateBoard() {
     GameObject board = GameObject.FindGameObjectWithTag("Board");
 
@@ -55,34 +52,23 @@ public class GameManager : MonoBehaviour {
     GameObject piece = (GameObject)Instantiate(BoardPiece, new Vector3(tileX,_pieceYPos,tileZ), Quaternion.identity);
     piece.name = "piece" + playerNum;
 
-    PieceControl controller = piece.GetComponent<PieceControl>();
-    controller.PlayerNum = playerNum;
-    controller.MeshObject.renderer.material.color = playerNum == 0 ? Color.red : Color.blue;
-  }
-
-  void DestroyPiece(GameObject piece) {
+    PieceEntity entity = piece.GetComponent<PieceEntity>();
+    entity.PlayerNum = playerNum;
+    entity.MeshObject.renderer.material.color = playerNum == 0 ? Color.red : Color.blue;
   }
 
   void PieceMoved(NotificationCenter.Notification notification) {
-    GameObject pieceToKill;
-    int tileX = (int)Math.Floor(notification.Sender.transform.position.x);
-    int tileZ = (int)Math.Floor(notification.Sender.transform.position.z);
+    BoardEntity pieceToKill;
+    BoardEntity movedPiece = (BoardEntity)notification.Sender;
+    int tileX = movedPiece.GetTileX();
+    int tileZ = movedPiece.GetTileZ();
     
-    if (pieceToKill = GetPieceAtTile(tileX, tileZ)) {
-      DestroyPiece(pieceToKill);
+    if (pieceToKill = _board.GetPieceAtTile(tileX, tileZ)) {
+      // TODO: Move this logic to Piece.Collide
     }
 
-    UpdatePiecePosition(notification.Sender.name, tileX, tileZ);
+    _board.UpdatePiecePosition(movedPiece, tileX, tileZ);
     NextTurn();
-  }
-
-  GameObject GetPieceAtTile(int tileX, int tileZ) {
-    // TODO
-    return null;
-  }
-
-  void UpdatePiecePosition(string pieceName, int tileX, int tileZ) {
-    // TODO
   }
 
   void NextTurn() {
@@ -92,4 +78,5 @@ public class GameManager : MonoBehaviour {
     }; 
     NotificationCenter.DefaultCenter.PostNotification(this, "NextTurn", notifData);
   }
+
 }

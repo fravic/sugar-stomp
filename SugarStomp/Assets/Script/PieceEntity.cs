@@ -2,9 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public class PieceControl : MonoBehaviour {
+public class PieceEntity : BoardEntity {
 
-  public GameObject MeshObject = null;
   public int PlayerNum = 0;
   public bool InputEnabled = true;
 
@@ -14,10 +13,6 @@ public class PieceControl : MonoBehaviour {
 
   void Awake() {
     NotificationCenter.DefaultCenter.AddObserver(this, "NextTurn");
-  }
-
-  void OnDestroy() {
-    NotificationCenter.DefaultCenter.RemoveObserver(this, "NextTurn");
   }
 
   void Update() {
@@ -70,24 +65,7 @@ public class PieceControl : MonoBehaviour {
     }
   }
 
-  void AnimateToYPos(float yPos) {
-    Vector3 newPos = new Vector3(gameObject.transform.position.x,
-				 yPos,
-				 gameObject.transform.position.z);
-    iTween.MoveTo(gameObject, newPos, 0.5f);
-  }
-
-  void MoveToTile(int tileX, int tileZ) {
-    Vector3 pos = new Vector3(tileX, gameObject.transform.position.y, tileZ);
-    Hashtable tweenOptions = new Hashtable {
-	{"position", pos},
-	{"oncomplete", "MoveToTileComplete"},
-	{"time", 0.5f}
-    }; 
-    iTween.MoveTo(gameObject, tweenOptions);
-  }
-
-  void MoveToTileComplete() {
+  protected override void MoveToTileComplete() {
     NotificationCenter.DefaultCenter.PostNotification(this, "PieceMoved");
     DeselectPiece();
   }
@@ -96,4 +74,5 @@ public class PieceControl : MonoBehaviour {
     return Math.Abs(transform.position.x - tileX) <= 1 &&
       Math.Abs(transform.position.z - tileZ) <= 1;
   }
+
 }
