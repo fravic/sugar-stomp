@@ -6,6 +6,7 @@ public abstract class BoardEntity : MonoBehaviour {
 
   public Board GameBoard;
   public GameObject MeshObject = null;
+  public abstract bool Selected { get; set; }
 
   public int GetTileX() {
     return (int)Math.Floor(transform.position.x);
@@ -15,14 +16,7 @@ public abstract class BoardEntity : MonoBehaviour {
     return (int)Math.Floor(transform.position.z);
   }
 
-  protected void AnimateToYPos(float yPos) {
-    Vector3 newPos = new Vector3(gameObject.transform.position.x,
-				 yPos,
-				 gameObject.transform.position.z);
-    iTween.MoveTo(gameObject, newPos, 0.5f);
-  }
-
-  protected void MoveToTile(int tileX, int tileZ) {
+  public void MoveToTile(int tileX, int tileZ) {
     Vector3 pos = new Vector3(tileX, gameObject.transform.position.y, tileZ);
     Hashtable tweenOptions = new Hashtable {
 	{"position", pos},
@@ -34,6 +28,13 @@ public abstract class BoardEntity : MonoBehaviour {
 
   protected virtual void MoveToTileComplete() {
     GameBoard.UpdatePiecePosition(this, GetTileX(), GetTileZ());
+  }
+
+  protected void AnimateToYPos(float yPos) {
+    Vector3 newPos = new Vector3(gameObject.transform.position.x,
+				 yPos,
+				 gameObject.transform.position.z);
+    iTween.MoveTo(gameObject, newPos, 0.5f);
   }
 
   protected virtual void CollideInto(BoardEntity collider) {

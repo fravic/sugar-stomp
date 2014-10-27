@@ -1,15 +1,28 @@
 using UnityEngine;
-using System.Collections;
 using System;
+using System.Collections;
 
 public class PieceEntity : BoardEntity {
 
   public int PlayerNum = 0;
-  public bool InputEnabled = true;
 
-  private bool _selected = false;
+  private PlayerInputBehavior _inputBehavior;
+
   private float _yPosSelected = 1;
   private float _yPosDefault = 0;
+  
+  private bool _selected = false;
+  public override bool Selected {
+    get { return _selected; }
+    set {
+      _selected = value;
+      if (!_selected) {
+	AnimateToYPos(_yPosDefault);
+      } else {
+	AnimateToYPos(_yPosSelected);
+      }	
+    }
+  }
 
   protected override void MoveToTileComplete() {
     BoardEntity collideEntity = GameBoard.GetPieceAtTile(GetTileX(), GetTileZ());
@@ -21,17 +34,19 @@ public class PieceEntity : BoardEntity {
     }
 
     NotificationCenter.DefaultCenter.PostNotification(this, "EndTurn");
-    DeselectPiece();
+    this.Selected = false;
   }
 
   void Awake() {
     NotificationCenter.DefaultCenter.AddObserver(this, "StartTurn");
+
+    // Just use default behaviors for now
+    _inputBehavior = new PlayerInputBehavior();
+    _inputBehavior.Movement = new MovementBehavior();
   }
 
   void Update() {
-    if (InputEnabled) {
-      ReadInput();	
-    }
+    _inputBehavior.ReadInputForEntity(this);
   }
 
   void StartTurn(NotificationCenter.Notification notification) {
@@ -39,48 +54,6 @@ public class PieceEntity : BoardEntity {
       Debug.LogError("No activePlayerNum set in NextTurn notification");
       return;
     }
-    InputEnabled = ((int)notification.Data["activePlayerNum"] == PlayerNum);
+    _inputBehavior.InputEnabled = ((int)notification.Data["activePlayerNum"] == PlayerNum);
   }
-
-  void ReadInput() {
-    Ray ray;
-    RaycastHit hitInfo;
-
-    if (Input.GetMouseButtonDown(0)) { // Left click
-      ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-      if (Physics.Raycast(ray, out hitInfo)) {
-	if (hitInfo.collider.gameObject.transform.IsChildOf(gameObject.transform)) {
-	  SelectPiece();
-	} else if (_selected) {
-	  int tileX = (int)Math.Floor(hitInfo.collider.gameObject.transform.position.x);
-	  int tileZ = (int)Math.Floor(hitInfo.collider.gameObject.transform.position.z);
-	  if (IsTileAccessible(tileX, tileZ)) {
-	    MoveToTile(tileX, tileZ);
-	  }
-        }
-      }
-
-    }
-  }
-
-  void SelectPiece() {
-    if (!_selected) {
-      AnimateToYPos(_yPosSelected);
-      _selected = true;
-    }
-  }
-
-  void DeselectPiece() {
-    if (_selected) {
-      AnimateToYPos(_yPosDefault);
-      _selected = false;
-    }
-  }
-
-  bool IsTileAccessible(int tileX, int tileZ) {
-    return Math.Abs(transform.position.x - tileX) <= 1 &&
-      Math.Abs(transform.position.z - tileZ) <= 1;
-  }
-
 }

@@ -46,6 +46,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Script\Behaviors\MovementBehavior.cs" />
+     <Compile Include="Assets\Script\Behaviors\PlayerInputBehavior.cs" />
      <Compile Include="Assets\Script\Board.cs" />
      <Compile Include="Assets\Script\CameraPanControl.cs" />
      <Compile Include="Assets\Script\Entities\BoardEntity.cs" />
