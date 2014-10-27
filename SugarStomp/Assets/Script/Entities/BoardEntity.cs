@@ -6,7 +6,7 @@ public abstract class BoardEntity : MonoBehaviour {
 
   public Board GameBoard;
   public GameObject MeshObject = null;
-  public abstract bool Selected { get; set; }
+  public virtual bool Selected { get; set; }
 
   public int GetTileX() {
     return (int)Math.Floor(transform.position.x);
@@ -47,6 +47,7 @@ public abstract class BoardEntity : MonoBehaviour {
 
   protected virtual void DestroyEntity() {
     Destroy(gameObject);
+    Destroy(this);
   }
 
 }

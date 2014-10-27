@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
 
   public GameObject BoardPieceTemplate;
   public GameObject BoardSquareTemplate;
+  public GameObject BoardPowerupTemplate;
 
   public int NumPlayers = 2;
   public int ActivePlayer = -1;
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour {
 
     CreateBoard();
     AddPieces();
+    AddPowerup(1, 1);
     NextTurn();
   }
 
@@ -54,6 +56,18 @@ public class GameManager : MonoBehaviour {
     entity.GameBoard = _board;
     entity.PlayerNum = playerNum;
     entity.MeshObject.renderer.material.color = playerNum == 0 ? Color.red : Color.blue;
+    entity.MoveToTile(tileX, tileZ);
+  }
+
+  void AddPowerup(int tileX, int tileZ) {
+    GameObject powerup = (GameObject)Instantiate(BoardPowerupTemplate, new Vector3(tileX,_pieceYPos,tileZ), Quaternion.identity);
+    powerup.name = "powerup";
+
+    PowerupEntity entity = powerup.GetComponent<PowerupEntity>();
+    entity.GameBoard = _board;
+    entity.MeshObject.renderer.material.color = Color.yellow;
+    entity.Power = new JumpProofPowerup();
+    entity.MoveToTile(tileX, tileZ);
   }
 
   void EndTurn() {

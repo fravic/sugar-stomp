@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 public class Board {
 
-  private Dictionary<string,BoardEntity> _posToPiece = new Dictionary<string,BoardEntity>();
+  private Dictionary<string,BoardEntity> _posToEnt = new Dictionary<string,BoardEntity>();
   
   public BoardEntity GetPieceAtTile(int tileX, int tileZ) {
     string key = CoordsToStr(tileX, tileZ);
     BoardEntity piece;
-    if (_posToPiece.TryGetValue(key, out piece)) {
+    if (_posToEnt.TryGetValue(key, out piece)) {
       return piece;
     } else {
       return null;
@@ -20,10 +20,10 @@ public class Board {
     int oldTileX = piece.GetTileX();
     int oldTileZ = piece.GetTileZ();
     string oldKey = CoordsToStr(oldTileX, oldTileZ);
-    _posToPiece.Remove(oldKey);
+    _posToEnt.Remove(oldKey);
 
     string newKey = CoordsToStr(tileX, tileZ);
-    _posToPiece.Add(newKey, piece);
+    _posToEnt.Add(newKey, piece);
   }
 
   private string CoordsToStr(int tileX, int tileZ) {
