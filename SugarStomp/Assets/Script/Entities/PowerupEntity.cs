@@ -4,14 +4,19 @@ using System;
 
 public class PowerupEntity : BoardEntity {
 
-  public Powerup Power;
+  public string PowerupType;
 
   protected override void CollideReceived(BoardEntity collider) {
-    if (Power == null) {
-      Debug.LogWarning("PowerupEntity has no Power attached");
+    if (PowerupType == null) {
+      Debug.LogWarning("PowerupEntity has no PowerupType");
     }
 
-    Power.PickedUp((PieceEntity)collider);
+    PieceEntity ent = (PieceEntity)collider;
+    Powerup powerup = (Powerup)ent.gameObject.AddComponent(PowerupType);
+    powerup.PickedUp();
+
+    // Auto-apply powerups for now
+    powerup.Apply();
 
     base.CollideReceived(collider);
   }

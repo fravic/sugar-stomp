@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour {
     PowerupEntity entity = powerup.GetComponent<PowerupEntity>();
     entity.GameBoard = _board;
     entity.MeshObject.renderer.material.color = Color.yellow;
-    entity.Power = new JumpProofPowerup();
+    entity.PowerupType = "JumpProofPowerup";
     entity.MoveToTile(tileX, tileZ);
   }
 

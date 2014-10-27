@@ -4,7 +4,7 @@ using System;
 
 public abstract class BoardEntity : MonoBehaviour {
 
-  public Board GameBoard;
+  public virtual Board GameBoard { get; set; }
   public GameObject MeshObject = null;
   public virtual bool Selected { get; set; }
 
@@ -27,7 +27,7 @@ public abstract class BoardEntity : MonoBehaviour {
   }
 
   protected virtual void MoveToTileComplete() {
-    GameBoard.UpdatePiecePosition(this, GetTileX(), GetTileZ());
+    GameBoard.UpdateEntPosition(this, GetTileX(), GetTileZ());
   }
 
   protected void AnimateToYPos(float yPos) {
@@ -46,6 +46,8 @@ public abstract class BoardEntity : MonoBehaviour {
   }
 
   protected virtual void DestroyEntity() {
+    GameBoard.RemoveEnt(this);
+
     Destroy(gameObject);
     Destroy(this);
   }

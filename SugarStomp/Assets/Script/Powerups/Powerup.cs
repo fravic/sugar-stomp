@@ -2,13 +2,18 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public abstract class Powerup {
-  private PieceEntity _owner;
+public abstract class Powerup : MonoBehaviour {
+  public bool Active;
 
-  public abstract void Apply();
-  public abstract void Remove();
+  public virtual void Apply() {
+    Active = true;
+  }
 
-  public virtual void PickedUp(PieceEntity owner) {
-    _owner = owner;
+  public virtual void Remove() {
+    Active = false;
+    Destroy(this);
+  }
+
+  public virtual void PickedUp() {
   }
 }

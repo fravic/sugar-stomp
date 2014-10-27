@@ -24,7 +24,7 @@ public class PlayerInputBehavior {
 	} else if (entity.Selected) {
 	  int tileX = (int)Math.Floor(hitInfo.collider.gameObject.transform.position.x);
 	  int tileZ = (int)Math.Floor(hitInfo.collider.gameObject.transform.position.z);
-	  if (Movement.IsTileAccessible(entity.GetTileX(), entity.GetTileZ(), tileX, tileZ)) {
+	  if (Movement.IsTileAccessible(entity.GameBoard, entity.GetTileX(), entity.GetTileZ(), tileX, tileZ)) {
 	    entity.MoveToTile(tileX, tileZ);
 	  }
         }

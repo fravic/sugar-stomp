@@ -5,11 +5,6 @@ using System.Collections;
 public class PieceEntity : BoardEntity {
 
   public int PlayerNum = 0;
-
-  private PlayerInputBehavior _inputBehavior;
-
-  private float _yPosSelected = 1;
-  private float _yPosDefault = 0;
   
   private bool _selected = false;
   public override bool Selected {
@@ -24,14 +19,19 @@ public class PieceEntity : BoardEntity {
     }
   }
 
-  protected override void MoveToTileComplete() {
-    BoardEntity collideEntity = GameBoard.GetPieceAtTile(GetTileX(), GetTileZ());
+  private PlayerInputBehavior _inputBehavior;
 
-    base.MoveToTileComplete();
+  private float _yPosSelected = 1;
+  private float _yPosDefault = 0;
+
+  protected override void MoveToTileComplete() {
+    BoardEntity collideEntity = GameBoard.GetEntAtTile(GetTileX(), GetTileZ());
 
     if (collideEntity != null) {
       CollideInto(collideEntity);
     }
+
+    base.MoveToTileComplete();
 
     NotificationCenter.DefaultCenter.PostNotification(this, "EndTurn");
     this.Selected = false;
@@ -42,7 +42,8 @@ public class PieceEntity : BoardEntity {
 
     // Just use default behaviors for now
     _inputBehavior = new PlayerInputBehavior();
-    _inputBehavior.Movement = new MovementBehavior();
+    MovementBehavior movementBehavior = new MovementBehavior();
+    _inputBehavior.Movement = movementBehavior;
   }
 
   void Update() {
