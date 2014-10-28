@@ -21,6 +21,6 @@ public class MovementBehavior {
   }
 
   protected virtual bool TileIsAccessibleFromPoint(Board gameBoard, int curX, int curZ, int targetX, int targetZ) {
-    return Math.Abs(curX - targetX) <= 1 && Math.Abs(curZ - targetZ) <= 1;
+    return Math.Abs(curX - targetX) + Math.Abs(curZ - targetZ) <= 1;
   }
 }
