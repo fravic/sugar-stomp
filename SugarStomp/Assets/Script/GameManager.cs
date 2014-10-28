@@ -31,6 +31,10 @@ public class GameManager : MonoBehaviour {
     NextTurn();
   }
 
+  void OnGUI() {
+    SelectedPieceControls.CheckUsePower();
+  }
+
   void CreateBoard() {
     GameObject board = GameObject.FindGameObjectWithTag("Board");
 
